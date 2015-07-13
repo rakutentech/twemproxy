@@ -1,8 +1,12 @@
+# -*- encoding: utf-8 -*-
+
 #
 # Cookbook Name:: twemproxy
 # Recipe:: install
 #
+# Copyright 2015, Rakuten, Inc.
 # Copyright 2014, Virender Khatri
+# Copyright 2014, Guilhem Lettron
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,14 +23,14 @@
 
 include_recipe 'twemproxy::package_dependency'
 
-[node['twemproxy']['log_dir'],
- node['twemproxy']['conf_dir'],
- node['twemproxy']['data_dir']
+[
+  node['twemproxy']['log_dir'],
+  node['twemproxy']['conf_dir'],
+  node['twemproxy']['data_dir']
 ].each do |dir|
   directory dir do
     owner node['twemproxy']['user']
     group node['twemproxy']['group']
-    mode node['twemproxy']['dir_mode']
     recursive true
   end
 end

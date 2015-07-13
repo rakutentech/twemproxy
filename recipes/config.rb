@@ -1,8 +1,12 @@
+# -*- encoding: utf-8 -*-
+
 #
 # Cookbook Name:: twemproxy
 # Recipe:: config
 #
+# Copyright 2015, Rakuten, Inc.
 # Copyright 2014, Virender Khatri
+# Copyright 2014, Guilhem Lettron
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,25 +23,26 @@
 
 template node['twemproxy']['environment_file'] do
   source 'environment_file.erb'
-  mode node['twemproxy']['dir_mode']
   owner node['twemproxy']['user']
   group node['twemproxy']['group']
-  variables(:launch_options => node['twemproxy']['launch_options'])
+  variables(launch_options: node['twemproxy']['launch_options'])
   notifies :restart, 'service[twemproxy]', :delayed if node['twemproxy']['notify_restart']
 end
 
 file node['twemproxy']['config_file'] do
   owner node['twemproxy']['user']
   group node['twemproxy']['group']
-  mode node['twemproxy']['dir_mode']
-  # Use JSON to workaround https://tickets.opscode.com/browse/CHEF-3953
-  # Use lines.to_a to suppress first yaml line
-  content JSON.parse(node['twemproxy']['config'].to_json).to_yaml.lines.to_a[1..-1].join
+  content lazy { render_configuration_file }
   notifies :restart, 'service[twemproxy]', :delayed if node['twemproxy']['notify_restart']
+end
+
+cookbook_file '/etc/init/twemproxy.conf' do
+  source 'twemproxy.conf'
+  only_if { node['platform_family'] == 'debian' }
 end
 
 service 'twemproxy' do
   provider Chef::Provider::Service::Upstart if node['platform_family'] == 'debian'
-  supports :status => true, :restart => true
+  supports status: true, restart: true
   action [:enable, :start]
 end

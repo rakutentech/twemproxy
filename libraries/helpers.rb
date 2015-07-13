@@ -2,7 +2,7 @@
 
 #
 # Cookbook Name:: twemproxy
-# Recipe:: package_dependency
+# Library:: helpers
 #
 # Copyright 2015, Rakuten, Inc.
 # Copyright 2014, Virender Khatri
@@ -21,6 +21,16 @@
 # limitations under the License.
 #
 
-node['twemproxy']['packages'].each do |p|
-  package p
+module TwemProxy
+  module Helpers
+    def render_configuration_file
+      # Use `JSON#parse` the circumvent the following issue:
+      #   https://tickets.opscode.com/browse/CHEF-3953
+      json = node['twemproxy']['config'].to_json
+      _, *lines = JSON.parse(json).to_yaml.lines
+      lines.join
+    end
+  end
 end
+
+Chef::Resource.send(:include, ::TwemProxy::Helpers)
