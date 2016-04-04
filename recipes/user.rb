@@ -1,8 +1,12 @@
+# -*- encoding: utf-8 -*-
+
 #
 # Cookbook Name:: twemproxy
 # Recipe:: user
 #
+# Copyright 2015, Rakuten, Inc.
 # Copyright 2014, Virender Khatri
+# Copyright 2014, Guilhem Lettron
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,16 +19,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-
-# WARNING:
-# User setup by this recipe may not provide a unique
-# user/group id across nodes and could create problem
-# of non-unique next available user id for User
-# management cookbook.
-#
-# It is advised to use a User management recipe instead
-# for Production systems.
 #
 
 group node['twemproxy']['group'] do

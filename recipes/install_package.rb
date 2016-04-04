@@ -1,8 +1,12 @@
+# -*- encoding: utf-8 -*-
+
 #
 # Cookbook Name:: twemproxy
 # Recipe:: install_package
 #
+# Copyright 2015, Rakuten, Inc.
 # Copyright 2014, Virender Khatri
+# Copyright 2014, Guilhem Lettron
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +24,7 @@
 case node['platform_family']
 when 'debian'
   include_recipe 'apt'
-  # apt repository configuration
+
   apt_repository 'twemproxy' do
     uri node['twemproxy']['apt']['uri']
     distribution node['twemproxy']['apt']['distribution']
@@ -31,7 +35,7 @@ when 'debian'
     action node['twemproxy']['apt']['action']
   end
 else
-  fail "package install is not available for platform #{node['platform']}"
+  fail "Package install is not available for platform #{node['platform']}"
 end
 
 package 'twemproxy' do
